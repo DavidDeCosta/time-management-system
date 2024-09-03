@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import DropdownButton from '../components/DropdownButton';
 import AddUserForm from '../components/AddUserForm';
 import EditUserForm from '../components/EditUserForm';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import DayPage from '../pages/DayPage';
+import WeekPage from '../pages/WeekPage';
+import MonthPage from '../pages/MonthPage';
 import { getAllUsers } from '../services/userService';
 
 const MainPage = () => {
@@ -58,6 +58,24 @@ const MainPage = () => {
         setShowAddUserForm(false); 
     };
 
+    const getFormattedDate = () =>{
+        const today = new Date();
+        return today.toLocaleDateString('en-US',{year: 'numeric', month: 'long', day: 'numeric'});
+    };
+
+    const renderViewPage = () => {
+        switch(view) {
+            case 'day':
+                return <DayPage />;
+            case 'week':
+                return <WeekPage />;
+            case 'month':
+                return <MonthPage />;
+            default:
+                return <DayPage />;
+        }
+    }
+
     const userOptions = [...users, { username: 'Add User' }];
     const viewOptions = ['day', 'week', 'month'];
 
@@ -89,23 +107,17 @@ const MainPage = () => {
                     }}
                 />
             </div>
+            
+            <div className="mb-4 text-xl font-semibold text-center text-gray-700">
+                {getFormattedDate()}
+            </div>
 
             {showAddUserForm ? (
                 <AddUserForm onUserCreated={handleUserCreated} />
             ) : editUser ? (
                 <EditUserForm user={editUser} onUserUpdated={(updatedUser) => setEditUser(updatedUser)} onCancel={() => setEditUser(null)} />
             ) : (
-                <div style={{ height: '500px' }} className="p-4 border rounded-lg shadow-lg">
-                    <Calendar
-                        localizer={momentLocalizer(moment)}
-                        events={[]}
-                        startAccessor="start"
-                        endAccessor="end"
-                        view={view}
-                        onView={setView}
-                        toolbar={false}
-                    />
-                </div>
+                renderViewPage()
             )}
         </div>
     );
