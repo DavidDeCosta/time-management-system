@@ -6,8 +6,13 @@ import com.daviddecosta.time_management.model.User;
 import com.daviddecosta.time_management.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import java.util.List;
 
@@ -65,6 +70,21 @@ public class EventController {
 
         Event updatedEvent = eventService.saveEvent(existingEvent);
         return ResponseEntity.ok(updatedEvent);
+    }
+
+    @GetMapping("/date/{date}")
+    public ResponseEntity<List<Event>> getEventsByDate(@PathVariable String date) {
+        try {
+            LocalDate localDate = LocalDate.parse(date);
+            LocalDateTime startOfDay = localDate.atStartOfDay();
+            LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
+
+            List<Event> events = eventService.getEventsByDate(startOfDay, endOfDay);
+            return ResponseEntity.ok(events);
+        } catch (Exception e) {
+            // Log the exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{id}")

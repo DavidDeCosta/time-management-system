@@ -23,6 +23,17 @@ export const getAllEvents = async () => {
     }
 };
 
+// Get events for a specific date
+export const getEventsByDate = async (date) => {
+    try {
+        const response = await axios.get(`${API_URL}/date/${date}`);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch events for date', error);
+        throw error;
+    }
+};
+
 // Get a single event by ID
 export const getEventById = async (id) => {
     try {
@@ -33,6 +44,8 @@ export const getEventById = async (id) => {
         throw error;
     }
 };
+
+
 
 // Update an event
 export const updateEvent = async (eventData) => {
