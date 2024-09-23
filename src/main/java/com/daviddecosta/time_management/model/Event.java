@@ -3,6 +3,10 @@ package com.daviddecosta.time_management.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "events")
 public class Event {
@@ -26,7 +30,9 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // User entity that refers to the user who owns this event
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private User user;
 
     // Constructors, getters, and setters
 
