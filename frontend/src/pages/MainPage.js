@@ -66,15 +66,16 @@ const MainPage = () => {
     const renderViewPage = () => {
         switch(view) {
             case 'day':
-                return <DayPage />;
+                return <DayPage user={user} />;
             case 'week':
-                return <WeekPage />;
+                return <WeekPage user={user} />;
             case 'month':
-                return <MonthPage />;
+                return <MonthPage user={user} />;
             default:
-                return <DayPage />;
+                return <DayPage user={user} />;
         }
     }
+    
 
     const userOptions = [...users, { username: 'Add User' }];
     const viewOptions = ['day', 'week', 'month'];
